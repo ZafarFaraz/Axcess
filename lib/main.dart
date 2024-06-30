@@ -1,5 +1,5 @@
-import 'package:axcess/home/accessories_page.dart';
-import 'package:axcess/tts/tts_page.dart';
+import 'package:axcess/pages/home/accessories_page.dart';
+import 'package:axcess/pages/tts/tts_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
