@@ -152,7 +152,7 @@ class _TTSContentState extends State<TTSContent> {
                   },
                   child: Text("Speak"),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8,
                 ),
                 Expanded(
@@ -166,7 +166,7 @@ class _TTSContentState extends State<TTSContent> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
                     if (_customPhraseController.text.isNotEmpty) {
