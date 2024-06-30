@@ -152,6 +152,9 @@ class _TTSContentState extends State<TTSContent> {
                   },
                   child: Text("Speak"),
                 ),
+                SizedBox(
+                  width: 8,
+                ),
                 Expanded(
                   child: TextField(
                     controller: _customPhraseController,
