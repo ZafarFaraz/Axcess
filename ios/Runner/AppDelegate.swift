@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
 import UserNotifications
+import Contacts
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -38,6 +39,9 @@ import UserNotifications
                     }
                 }
           }
+          else if call.method == "requestContactPermission" {
+              self?.requestContactPermission(result:result)
+          }
       }
       requestNotificationPermission()
       return super.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -60,6 +64,18 @@ import UserNotifications
     // Register for remote notifications
     UIApplication.shared.registerForRemoteNotifications()
   }
+    
+    private func requestContactPermission(result: @escaping FlutterResult) {
+                let store = CNContactStore()
+                store.requestAccess(for: .contacts) { granted, error in
+                    if let error = error {
+                        result(FlutterError(code: "ERROR", message: "Error requesting contact permission", details: error.localizedDescription))
+                    } else {
+                        result(granted)
+         }
+       }
+    }
+    
   
   // Handle notifications when app is in foreground
   override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {

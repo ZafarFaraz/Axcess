@@ -1,3 +1,4 @@
+import 'package:axcess/pages/communication/communication_home.dart';
 import 'package:axcess/pages/home/accessories_page.dart';
 import 'package:axcess/pages/tts/tts_page.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   static const List<Widget> _pages = <Widget>[
     TTSPage(),
     HomeAccessories(),
+    CommunicationHomePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -50,6 +52,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.home),
             label: 'Smart Home',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.call), label: 'Communicate'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
