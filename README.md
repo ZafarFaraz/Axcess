@@ -8,7 +8,7 @@ The app includes the following applications:
 1. **Text-to-Speech**
 2. **Smart Home**
 3. **Note Taking/Reminders**
-4. **PDF Reader**
+4. **Caller (Keypad / Contacts)**
 
 ## Getting Started
 
@@ -49,6 +49,7 @@ The project follows a standard Flutter project structure:
   - `pages/` - different tabs in the navigation bar
     - `tts/` - text to speech (TTS) functionality
     - `home/` - controlling home accessories
+    - `notes/` - taking notes or adding reminders
   - `main.dart` - Entry point of the application.
 - `test/` - Unit and widget tests.
 - `pubspec.yaml` - Flutter project configurations and dependencies.
@@ -68,9 +69,26 @@ The Smart Home feature allows users to control smart home devices using the app.
 
 This feature allows users to take notes and set reminders. It helps users keep track of their tasks and important events.
 
-### PDF Reader
+### Caller
 
-The PDF Reader allows users to read PDF documents. It includes features like text scaling, page navigation, and more.
+This section allows you to dial a number using your cell provider or call a number from your contacts
+
+## Screenshots
+
+### Text to Speech
+
+### Smart Home
+
+![IMG_0119](https://github.com/ZafarFaraz/Axcess/assets/130891786/66659022-be99-4100-8dc3-da0acb6464e7)
+
+### Caller
+
+![IMG_0120](https://github.com/ZafarFaraz/Axcess/assets/130891786/2134ecbb-d287-4345-88eb-a65224467aab)
+
+### Notes
+
+![IMG_0121](https://github.com/ZafarFaraz/Axcess/assets/130891786/6a2871d1-2191-4e5b-b412-adca09c87f5b)
+
 
 ## Contributing
 
