@@ -24,7 +24,7 @@ class _CommunicationHomePageState extends State<CommunicationHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Communication'),
+        title: Text('Communicate'),
       ),
       body: Row(
         children: [
@@ -38,7 +38,9 @@ class _CommunicationHomePageState extends State<CommunicationHomePage> {
                 label: Text('Keypad'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.contacts),
+                icon: Icon(
+                  Icons.contacts,
+                ),
                 label: Text('Contacts'),
               ),
             ],

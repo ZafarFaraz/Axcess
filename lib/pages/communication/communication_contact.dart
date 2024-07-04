@@ -127,7 +127,6 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contacts'),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48.0),
           child: Padding(

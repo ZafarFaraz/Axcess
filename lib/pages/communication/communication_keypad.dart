@@ -53,16 +53,14 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Communication'),
-      ),
+      appBar: AppBar(),
       body: Column(
         children: [
           Expanded(
             child: Center(
               child: Text(
                 _phoneNumber,
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
               ),
             ),
           ),
