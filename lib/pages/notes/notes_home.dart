@@ -98,7 +98,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
                           3, // Adjust the number of columns as needed
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
-                      childAspectRatio: 1, // Adjust the aspect ratio as needed
+                      childAspectRatio: 3, // Adjust the aspect ratio as needed
                     ),
                     itemCount: _iosReminders.length,
                     itemBuilder: (context, index) {
