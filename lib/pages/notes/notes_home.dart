@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 class NotesHomePage extends StatefulWidget {
@@ -11,7 +12,9 @@ class NotesHomePage extends StatefulWidget {
 }
 
 class _NotesHomePageState extends State<NotesHomePage> {
+  static const platform = MethodChannel('axcessibility_notify');
   List<Subsection> _subsections = [];
+  List<Map<String, dynamic>> _iosReminders = [];
   String? _jsonFilePath;
   String _selectedSection = 'note'; // Ensure this matches the type field values
 
@@ -19,6 +22,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
   void initState() {
     super.initState();
     _initJsonFile();
+    _loadReminders();
   }
 
   Future<void> _initJsonFile() async {
@@ -129,6 +133,20 @@ class _NotesHomePageState extends State<NotesHomePage> {
     ];
   }
 
+  Future<void> _loadReminders() async {
+    try {
+      final List<dynamic> reminders =
+          await platform.invokeMethod('loadReminders');
+      setState(() {
+        _iosReminders = reminders
+            .map((reminder) => Map<String, dynamic>.from(reminder))
+            .toList();
+      });
+    } on PlatformException catch (e) {
+      print("Failed to load reminders: '${e.message}'.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Subsection> filteredSubsections = _subsections
@@ -161,7 +179,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
             ],
           ),
           Expanded(
-            child: filteredSubsections.isEmpty
+            child: filteredSubsections.isEmpty && _iosReminders.isEmpty
                 ? Center(
                     child: Text(
                       'No subsections available',
@@ -173,78 +191,23 @@ class _NotesHomePageState extends State<NotesHomePage> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount:
-                          4, // Adjust the number of columns as needed
+                          3, // Adjust the number of columns as needed
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
-                      childAspectRatio: 3, // Adjust the aspect ratio as needed
+                      childAspectRatio: 1, // Adjust the aspect ratio as needed
                     ),
-                    itemCount: filteredSubsections.length,
+                    itemCount:
+                        filteredSubsections.length + _iosReminders.length,
                     itemBuilder: (context, index) {
-                      final subsection = filteredSubsections[index];
-                      return Card(
-                        child: InkWell(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => Dialog(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(subsection.title,
-                                              style: TextStyle(
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.bold)),
-                                          IconButton(
-                                            icon: Icon(Icons.delete,
-                                                color: Colors.red),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              _removeSubsection(index);
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 16),
-                                      Text(subsection.content),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            color: subsection.type == 'reminder'
-                                ? Colors.red.shade100
-                                : Colors.yellow.shade100,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(subsection.title,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold)),
-                                SizedBox(height: 10),
-                                Text(
-                                  subsection.content,
-                                  maxLines: 4,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                      if (index < filteredSubsections.length) {
+                        final subsection = filteredSubsections[index];
+                        return _buildSubsectionTile(subsection, index);
+                      } else {
+                        final reminder =
+                            _iosReminders[index - filteredSubsections.length];
+                        return _buildReminderTile(
+                            reminder, index - filteredSubsections.length);
+                      }
                     },
                   ),
           ),
@@ -253,6 +216,123 @@ class _NotesHomePageState extends State<NotesHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddSubsectionDialog,
         child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildSubsectionTile(Subsection subsection, int index) {
+    return Card(
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) => Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(subsection.title,
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold)),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _removeSubsection(index);
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Text(subsection.content),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          color: subsection.type == 'reminder'
+              ? Colors.red.shade100
+              : Colors.yellow.shade100,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(subsection.title,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Text(
+                subsection.content,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReminderTile(Map<String, dynamic> reminder, int index) {
+    return Card(
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) => Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(reminder['title'],
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Text(reminder['notes'] ?? ''),
+                    SizedBox(height: 16),
+                    Text(reminder['completed'] ? 'Completed' : 'Not Completed'),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          color: Colors.blue.shade100,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(reminder['title'],
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Text(
+                reminder['notes'] ?? '',
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 10),
+              Text(
+                reminder['completed'] ? 'Completed' : 'Not Completed',
+                style: TextStyle(
+                    color: reminder['completed'] ? Colors.green : Colors.red),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

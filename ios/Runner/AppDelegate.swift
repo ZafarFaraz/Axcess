@@ -2,10 +2,12 @@ import UIKit
 import Flutter
 import UserNotifications
 import Contacts
+import EventKit
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
     private var homeManager: HomeManager?
+    private let eventStore = EKEventStore()
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -41,6 +43,8 @@ import Contacts
           }
           else if call.method == "requestContactPermission" {
               self?.requestContactPermission(result:result)
+          } else if call.method == "loadReminders" {
+              self?.loadReminders(result: result)
           }
       }
       requestNotificationPermission()
@@ -64,6 +68,16 @@ import Contacts
     // Register for remote notifications
     UIApplication.shared.registerForRemoteNotifications()
   }
+
+  private func requestReminderAccess(result: @escaping FlutterResult) {
+        eventStore.requestAccess(to: .reminder) { (granted, error) in
+            if granted {
+                self.loadReminders(result: result)
+            } else {
+                result(FlutterError(code: "PERMISSION_DENIED", message: "Access to reminders denied", details: nil))
+            }
+        }
+    }
     
     private func requestContactPermission(result: @escaping FlutterResult) {
                 let store = CNContactStore()
@@ -75,6 +89,30 @@ import Contacts
          }
        }
     }
+
+    private func loadReminders(result: @escaping FlutterResult) {
+    eventStore.requestAccess(to: .reminder) { (granted, error) in
+      if granted {
+        let predicate = self.eventStore.predicateForReminders(in: nil)
+        self.eventStore.fetchReminders(matching: predicate) { reminders in
+          var reminderList = [[String: Any]]()
+          for reminder in reminders ?? [] {
+            let title = reminder.title ?? ""
+            let notes = reminder.notes ?? ""
+            let completed = reminder.isCompleted
+            reminderList.append([
+              "title": title,
+              "notes": notes,
+              "completed": completed
+            ])
+          }
+          result(reminderList)
+        }
+      } else {
+        result(FlutterError(code: "PERMISSION_DENIED", message: "Access to reminders denied", details: nil))
+      }
+    }
+  }
     
   
   // Handle notifications when app is in foreground

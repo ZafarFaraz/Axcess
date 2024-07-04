@@ -10,6 +10,8 @@
       <string>tel</string>
       <string>facetime</string>
     </array>
+	<key>NSRemindersUsageDescription</key>
+	<string>We need access to your reminders to display them in the app.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
