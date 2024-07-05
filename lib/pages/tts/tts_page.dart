@@ -5,6 +5,8 @@ import 'package:axcess/pages/tts/tts_content.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../components/tts/tts_section.dart';
+
 class TTSPage extends StatefulWidget {
   const TTSPage({super.key});
 
@@ -14,9 +16,15 @@ class TTSPage extends StatefulWidget {
 
 class _TTSPageState extends State<TTSPage> {
   bool editMode = false;
-  List<String> _sections = ['Section 1', 'Section 2', 'Section 3'];
+  List<Section> _sections = [];
   int _selectedSectionIndex = 0;
   String? _jsonFilePath;
+
+  @override
+  void initState() {
+    super.initState();
+    _initJsonFile();
+  }
 
   void toggleEditMode(bool value) {
     setState(() {
@@ -26,15 +34,54 @@ class _TTSPageState extends State<TTSPage> {
 
   void _addSection() {
     setState(() {
-      _sections.add('Section ${_sections.length + 1}');
+      String newSection = 'Section ${_sections.length + 1}';
+      _sections.add(Section(newSection, []));
     });
     _updateJsonFile();
   }
 
+  void _editSection() {
+    final _sectionTitleController = TextEditingController();
+
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Edit Section'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: _sectionTitleController,
+                    decoration: InputDecoration(labelText: 'Section Title'),
+                  )
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel'),
+                ),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        String oldSection =
+                            _sections[_selectedSectionIndex].title;
+                        _sections[_selectedSectionIndex].title =
+                            _sectionTitleController.text;
+                        _updateJsonFile();
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Edit'))
+              ],
+            ));
+  }
+
   void _removeSection() {
-    print(_selectedSectionIndex.toString());
     setState(() {
-      _sections.removeAt(_selectedSectionIndex - 1);
+      _sections.removeAt(_selectedSectionIndex);
       _selectedSectionIndex = 0;
     });
     _updateJsonFile();
@@ -48,19 +95,29 @@ class _TTSPageState extends State<TTSPage> {
 
   Future<void> _initJsonFile() async {
     final directory = await getApplicationDocumentsDirectory();
-    _jsonFilePath = '${directory.path}/tts_$_sections.json';
+    _jsonFilePath = '${directory.path}/tts_sections.json';
     final file = File(_jsonFilePath!);
-    print(_jsonFilePath);
     if (!await file.exists()) {
-      await file.writeAsString(await DefaultAssetBundle.of(context)
-          .loadString('lib/assets/tts.json'));
+      await file.writeAsString(json.encode([]));
+    } else {
+      _loadSections();
     }
+  }
+
+  Future<void> _loadSections() async {
+    final file = File(_jsonFilePath!);
+    final String response = await file.readAsString();
+    final List<dynamic> data = json.decode(response);
+    setState(() {
+      _sections = data.map((item) => Section.fromJson(item)).toList();
+    });
   }
 
   Future<void> _updateJsonFile() async {
     try {
       final file = File(_jsonFilePath!);
-      await file.writeAsString(json.encode(_sections));
+      await file.writeAsString(
+          json.encode(_sections.map((e) => e.toJson()).toList()));
     } catch (e) {
       print("Failed to update JSON file: $e");
     }
@@ -68,6 +125,14 @@ class _TTSPageState extends State<TTSPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure there are at least two sections
+    if (_sections.isEmpty) {
+      _sections = [
+        Section('Section 1', []),
+        Section('Section 2', []),
+      ];
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Text to Speech'),
@@ -77,16 +142,18 @@ class _TTSPageState extends State<TTSPage> {
           if (editMode)
             Column(
               children: [
-                SizedBox(
-                  height: 375,
-                ),
+                SizedBox(height: 350),
                 FloatingActionButton(
                   onPressed: _addSection,
                   child: Icon(Icons.add),
                 ),
                 FloatingActionButton(
+                  onPressed: _editSection,
+                  child: Icon(Icons.edit),
+                ),
+                FloatingActionButton(
                   onPressed: _removeSection,
-                  child: Icon(Icons.exposure_minus_1),
+                  child: Icon(Icons.remove),
                 ),
               ],
             ),
@@ -108,7 +175,7 @@ class _TTSPageState extends State<TTSPage> {
                       width: 200,
                       height: 100,
                       child: Text(
-                        section,
+                        section.title,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 30),
                       ),
@@ -120,7 +187,12 @@ class _TTSPageState extends State<TTSPage> {
             child: TTSContent(
               editMode: editMode,
               section: _sections[_selectedSectionIndex],
-              onAddSection: _addSection,
+              onTtsItemsChanged: (items) {
+                setState(() {
+                  _sections[_selectedSectionIndex].phrases = items;
+                });
+                _updateJsonFile();
+              },
             ),
           ),
         ],

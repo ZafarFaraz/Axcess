@@ -1,23 +1,19 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:personal_voice_flutter/personal_voice_flutter.dart';
-
-import '../../components/tts_button.dart';
+import '../../components/tts/tts_button.dart';
+import '../../components/tts/tts_section.dart';
 
 class TTSContent extends StatefulWidget {
   final bool editMode;
-  final String section;
-  final VoidCallback onAddSection;
+  final Section section;
+  final ValueChanged<List<Map<String, String>>> onTtsItemsChanged;
 
-  const TTSContent(
-      {super.key,
-      required this.editMode,
-      required this.section,
-      required this.onAddSection});
+  const TTSContent({
+    super.key,
+    required this.editMode,
+    required this.section,
+    required this.onTtsItemsChanged,
+  });
 
   @override
   State<StatefulWidget> createState() => _TTSContentState();
@@ -27,57 +23,31 @@ class _TTSContentState extends State<TTSContent> {
   List<Map<String, String>> _ttsItems = [];
   TextEditingController _customPhraseController = TextEditingController();
   var speechPermission = "";
-  String? _jsonFilePath;
 
   @override
   void initState() {
     super.initState();
-    _initJsonFile();
+    _ttsItems = widget.section.phrases;
+    _requestSpeechPermission();
   }
 
-  Future<void> _initJsonFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    _jsonFilePath = '${directory.path}/tts_${widget.section}.json';
-    final file = File(_jsonFilePath!);
-    if (!await file.exists()) {
-      await file.writeAsString(await DefaultAssetBundle.of(context)
-          .loadString('lib/assets/tts.json'));
-    }
-    _loadTTSItems();
-  }
-
-  Future<void> _loadTTSItems() async {
-    final file = File(_jsonFilePath!);
-    final String response = await file.readAsString();
-    final List<dynamic> data = await json.decode(response);
+  void _requestSpeechPermission() async {
     speechPermission =
         (await PersonalVoiceFlutter().requestPersonalVoiceAuthorization())!;
-    setState(() {
-      _ttsItems = data.map((item) => Map<String, String>.from(item)).toList();
-    });
   }
 
-  Future<void> _addCustomPhrase(String phrase) async {
+  void _addCustomPhrase(String phrase) {
     setState(() {
       _ttsItems.add({"key": "custom_${_ttsItems.length}", "label": phrase});
+      widget.onTtsItemsChanged(_ttsItems);
     });
-    await _updateJsonFile();
   }
 
-  Future<void> _removePhrase(int index) async {
+  void _removePhrase(int index) {
     setState(() {
       _ttsItems.removeAt(index);
+      widget.onTtsItemsChanged(_ttsItems);
     });
-    await _updateJsonFile();
-  }
-
-  Future<void> _updateJsonFile() async {
-    try {
-      final file = File(_jsonFilePath!);
-      await file.writeAsString(json.encode(_ttsItems));
-    } catch (e) {
-      print("Failed to update JSON file: $e");
-    }
   }
 
   void ttsSpeak(String label) async {
@@ -107,7 +77,6 @@ class _TTSContentState extends State<TTSContent> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
                   children: [
@@ -124,46 +93,43 @@ class _TTSContentState extends State<TTSContent> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Expanded(
-                        child: ElevatedButton(
-                      onPressed: () {
-                        if (_customPhraseController.text.isNotEmpty) {
-                          ttsSpeak(_customPhraseController.text);
-                        }
-                      },
-                      child: Text("Speak"),
-                    )),
-                    const SizedBox(
-                      width: 8,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_customPhraseController.text.isNotEmpty) {
+                            ttsSpeak(_customPhraseController.text);
+                          }
+                        },
+                        child: Text("Speak"),
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Expanded(
-                        child: ElevatedButton(
-                      onPressed: () {
-                        if (_customPhraseController.text.isNotEmpty) {
-                          _addCustomPhrase(_customPhraseController.text);
-                          _customPhraseController.clear();
-                        }
-                      },
-                      child: Text("Add"),
-                    )),
-                    const SizedBox(
-                      width: 8,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_customPhraseController.text.isNotEmpty) {
+                            _addCustomPhrase(_customPhraseController.text);
+                            _customPhraseController.clear();
+                          }
+                        },
+                        child: Text("Add"),
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Expanded(
-                        child: ElevatedButton(
-                      onPressed: () {
-                        if (_customPhraseController.text.isNotEmpty) {
-                          _customPhraseController.clear();
-                        }
-                      },
-                      child: Text("Clear"),
-                    ))
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_customPhraseController.text.isNotEmpty) {
+                            _customPhraseController.clear();
+                          }
+                        },
+                        child: Text("Clear"),
+                      ),
+                    ),
                   ],
-                ),
-                const SizedBox(
-                  width: 8,
                 ),
               ],
             ),
