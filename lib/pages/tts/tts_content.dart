@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:personal_voice_flutter/personal_voice_flutter.dart';
 
@@ -38,7 +39,6 @@ class _TTSContentState extends State<TTSContent> {
     final directory = await getApplicationDocumentsDirectory();
     _jsonFilePath = '${directory.path}/tts_${widget.section}.json';
     final file = File(_jsonFilePath!);
-    print(_jsonFilePath);
     if (!await file.exists()) {
       await file.writeAsString(await DefaultAssetBundle.of(context)
           .loadString('lib/assets/tts.json'));
@@ -106,48 +106,65 @@ class _TTSContentState extends State<TTSContent> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Row(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    if (_customPhraseController.text.isNotEmpty) {
-                      ttsSpeak(_customPhraseController.text);
-                    }
-                  },
-                  child: Text("Speak"),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _customPhraseController,
+                        decoration: InputDecoration(
+                          labelText: "Enter custom phrase",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: ElevatedButton(
+                      onPressed: () {
+                        if (_customPhraseController.text.isNotEmpty) {
+                          ttsSpeak(_customPhraseController.text);
+                        }
+                      },
+                      child: Text("Speak"),
+                    )),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                        child: ElevatedButton(
+                      onPressed: () {
+                        if (_customPhraseController.text.isNotEmpty) {
+                          _addCustomPhrase(_customPhraseController.text);
+                          _customPhraseController.clear();
+                        }
+                      },
+                      child: Text("Add"),
+                    )),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                        child: ElevatedButton(
+                      onPressed: () {
+                        if (_customPhraseController.text.isNotEmpty) {
+                          _customPhraseController.clear();
+                        }
+                      },
+                      child: Text("Clear"),
+                    ))
+                  ],
                 ),
                 const SizedBox(
                   width: 8,
                 ),
-                Expanded(
-                  child: TextField(
-                    controller: _customPhraseController,
-                    decoration: InputDecoration(
-                      labelText: "Enter custom phrase",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_customPhraseController.text.isNotEmpty) {
-                      _addCustomPhrase(_customPhraseController.text);
-                      _customPhraseController.clear();
-                    }
-                  },
-                  child: Text("Add"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_customPhraseController.text.isNotEmpty) {
-                      _customPhraseController.clear();
-                    }
-                  },
-                  child: Text("Clear"),
-                )
               ],
             ),
           ),
