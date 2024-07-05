@@ -78,7 +78,7 @@ import EventKit
   }
 
   private func requestReminderAccess(result: @escaping FlutterResult) {
-        eventStore.requestAccess(to: .reminder) { (granted, error) in
+        eventStore.requestFullAccessToReminders(){ (granted, error) in
             if granted {
                 self.loadReminders(result: result)
             } else {
@@ -99,7 +99,7 @@ import EventKit
     }
 
     private func loadReminders(result: @escaping FlutterResult) {
-    eventStore.requestAccess(to: .reminder) { (granted, error) in
+    eventStore.requestFullAccessToReminders(){ (granted, error) in
       if granted {
         let predicate = self.eventStore.predicateForReminders(in: nil)
         self.eventStore.fetchReminders(matching: predicate) { reminders in
