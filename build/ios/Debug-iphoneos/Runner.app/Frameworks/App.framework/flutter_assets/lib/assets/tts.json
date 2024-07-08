@@ -1,8 +1,28 @@
 [
-    {"key": "item1", "label": "Hello"},
-    {"key": "item2", "label": "Hey Suf, How are you doing?"},
-    {"key": "item3", "label": "How about the weather, eh?"},
-    {"key": "item4", "label": "Zaibu, how was your day? was it good?"},
-    {"key": "item5", "label": "Assalamwaleikum"}
+    {
+        "title": "Section 1",
+        "phrases": [
+            {
+                "key": "custom_0",
+                "label": "Custom phrase 1 for Section 1"
+            },
+            {
+                "key": "custom_1",
+                "label": "Custom phrase 2 for Section 1"
+            }
+        ]
+    },
+    {
+        "title": "Section 2",
+        "phrases": [
+            {
+                "key": "custom_0",
+                "label": "Custom phrase 1 for Section 2"
+            },
+            {
+                "key": "custom_1",
+                "label": "Custom phrase 2 for Section 2"
+            }
+        ]
+    }
 ]
-  

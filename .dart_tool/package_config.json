@@ -110,6 +110,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "flutter_tts",
+      "rootUri": "file:///Users/synchronmacbookair/.pub-cache/hosted/pub.dev/flutter_tts-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/synchronmacbookair/Desktop/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
@@ -386,7 +392,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-07-04T06:42:38.678908Z",
+  "generated": "2024-07-08T03:04:55.131716Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }
