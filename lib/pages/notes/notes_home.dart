@@ -14,7 +14,7 @@ class NotesHomePage extends StatefulWidget {
 class _NotesHomePageState extends State<NotesHomePage> {
   static const platform = MethodChannel('axcessibility_notify');
   List<Map<String, dynamic>> _iosReminders = [];
-  String _selectedSection = 'reminder'; // Default to reminders
+  String _selectedSection = 'due'; // Default to due reminders
 
   @override
   void initState() {
@@ -57,6 +57,11 @@ class _NotesHomePageState extends State<NotesHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> dueReminders =
+        _iosReminders.where((reminder) => !reminder['completed']).toList();
+    final List<Map<String, dynamic>> completedReminders =
+        _iosReminders.where((reminder) => reminder['completed']).toList();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Reminders'),
@@ -64,48 +69,54 @@ class _NotesHomePageState extends State<NotesHomePage> {
       body: Row(
         children: [
           NavigationRail(
-            selectedIndex: _selectedSection == 'reminder' ? 0 : 1,
+            selectedIndex: _selectedSection == 'due' ? 0 : 1,
             onDestinationSelected: (index) {
               setState(() {
-                _selectedSection = index == 0 ? 'reminder' : 'note';
+                _selectedSection = index == 0 ? 'due' : 'completed';
               });
             },
             labelType: NavigationRailLabelType.selected,
-            destinations: [
+            destinations: const [
               NavigationRailDestination(
-                icon: Icon(Icons.alarm),
-                label: Text('Reminders'),
-              ),
+                  selectedIcon: Icon(
+                    Icons.alarm,
+                    size: 60,
+                  ),
+                  icon: Icon(
+                    Icons.alarm,
+                    size: 20,
+                  ),
+                  label: SizedBox(
+                    width: 150,
+                    height: 100,
+                    child: Text(
+                      'Due',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 30),
+                    ),
+                  )),
               NavigationRailDestination(
-                icon: Icon(Icons.note),
-                label: Text('Notes'),
-              ),
+                  icon: Icon(
+                    Icons.check,
+                    size: 40,
+                  ),
+                  label: SizedBox(
+                    width: 150,
+                    height: 100,
+                    child: Text(
+                      'Completed',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  )),
             ],
           ),
           Expanded(
-            child: _iosReminders.isEmpty
-                ? Center(
-                    child: Text(
-                      'No reminders available',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  )
-                : GridView.builder(
-                    padding: const EdgeInsets.all(10),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount:
-                          3, // Adjust the number of columns as needed
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 3, // Adjust the aspect ratio as needed
-                    ),
-                    itemCount: _iosReminders.length,
-                    itemBuilder: (context, index) {
-                      final reminder = _iosReminders[index];
-                      return _buildReminderTile(reminder, index);
-                    },
-                  ),
+            child: _selectedSection == 'due'
+                ? _buildRemindersGrid(
+                    dueReminders, 'No due reminders available')
+                : _buildRemindersGrid(
+                    completedReminders, 'No completed reminders available'),
           ),
         ],
       ),
@@ -114,6 +125,31 @@ class _NotesHomePageState extends State<NotesHomePage> {
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  Widget _buildRemindersGrid(
+      List<Map<String, dynamic>> reminders, String emptyMessage) {
+    return reminders.isEmpty
+        ? Center(
+            child: Text(
+              emptyMessage,
+              style: TextStyle(fontSize: 24),
+            ),
+          )
+        : GridView.builder(
+            padding: const EdgeInsets.all(10),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3, // Adjust the number of columns as needed
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 3, // Adjust the aspect ratio as needed
+            ),
+            itemCount: reminders.length,
+            itemBuilder: (context, index) {
+              final reminder = reminders[index];
+              return _buildReminderTile(reminder, index);
+            },
+          );
   }
 
   Widget _buildReminderTile(Map<String, dynamic> reminder, int index) {
