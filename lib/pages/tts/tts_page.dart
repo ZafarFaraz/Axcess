@@ -149,7 +149,9 @@ class _TTSPageState extends State<TTSPage> {
 
   void _incrementTileCount() {
     setState(() {
-      _sections[_selectedSectionIndex].tileCount++;
+      if (_sections[_selectedSectionIndex].tileCount < 4) {
+        _sections[_selectedSectionIndex].tileCount++;
+      }
     });
     _updateJsonFile();
   }
@@ -266,7 +268,6 @@ class _TTSPageState extends State<TTSPage> {
                           ))
                       .toList(),
                 ),
-                VerticalDivider(thickness: 1, width: 1),
                 Expanded(
                   child: Column(
                     children: [
@@ -374,5 +375,13 @@ class _TTSPageState extends State<TTSPage> {
               ],
             ),
     );
+  }
+
+  void _scrollUp() {
+    print('Scrolling Up');
+  }
+
+  void _scrollDown() {
+    print('Scrolling Down');
   }
 }

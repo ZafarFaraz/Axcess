@@ -57,51 +57,76 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
       body: Column(
         children: [
           Expanded(
-            child: Center(
-              child: Text(
-                _phoneNumber,
-                style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
+            child: Container(
+              child: Center(
+                child: Text(
+                  _phoneNumber,
+                  style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
-          GridView.builder(
-            padding: EdgeInsets.all(16.0),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-              mainAxisSpacing: 16.0,
-              crossAxisSpacing: 16.0,
-              childAspectRatio: 2.0,
+          _buildKeypad(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildActionButton(Icons.phone, _makeCall),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: _buildActionButton(Icons.videocam, _facetime),
+                ),
+              ],
             ),
-            itemCount: 12,
-            itemBuilder: (context, index) {
-              if (index < 9) {
-                return _buildNumberButton((index + 1).toString());
-              } else if (index == 10) {
-                return _buildSpecialButton(Icons.backspace, _deleteLastNumber);
-              } else if (index == 9) {
-                return _buildNumberButton('0');
-              } else {
-                return _buildSpecialButton(Icons.clear, _clearNumber);
-              }
-            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildActionButton(Icons.phone, _makeCall),
-              _buildActionButton(Icons.videocam, _facetime),
-            ],
-          ),
-          SizedBox(height: 32),
+          SizedBox(height: 16),
         ],
       ),
+    );
+  }
+
+  Widget _buildKeypad() {
+    return Column(
+      children: [
+        _buildKeypadRow(['1', '2', '3']),
+        SizedBox(height: 16),
+        _buildKeypadRow(['4', '5', '6']),
+        SizedBox(height: 16),
+        _buildKeypadRow(['7', '8', '9']),
+        SizedBox(height: 16),
+        _buildKeypadRow([Icons.backspace, '0', Icons.clear]),
+      ],
+    );
+  }
+
+  Widget _buildKeypadRow(List<dynamic> items) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (int i = 0; i < items.length; i++) ...[
+          if (i > 0) SizedBox(width: 16),
+          items[i] is String
+              ? _buildNumberButton(items[i])
+              : _buildSpecialButton(
+                  items[i],
+                  items[i] == Icons.backspace
+                      ? _deleteLastNumber
+                      : _clearNumber),
+        ]
+      ],
     );
   }
 
   Widget _buildNumberButton(String number) {
     return ElevatedButton(
       onPressed: () => _appendNumber(number),
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(),
+        padding: const EdgeInsets.all(24),
+        minimumSize: Size(120, 120),
+      ),
       child: Text(
         number,
         style: TextStyle(fontSize: 24),
@@ -112,6 +137,11 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
   Widget _buildSpecialButton(IconData icon, VoidCallback onPressed) {
     return ElevatedButton(
       onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(),
+        padding: const EdgeInsets.all(24),
+        minimumSize: Size(120, 120),
+      ),
       child: Icon(
         icon,
         size: 24,
@@ -123,8 +153,8 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        shape: CircleBorder(),
-        padding: EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(),
+        padding: EdgeInsets.symmetric(vertical: 16),
       ),
       child: Icon(
         icon,
