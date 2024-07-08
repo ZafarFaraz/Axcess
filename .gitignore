@@ -1,2 +1,21 @@
-build
-.dart_tool
+# Exclude build directory
+build/
+
+# Exclude .dart_tool directory
+.dart_tool/
+
+# Flutter related
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache
+.pub
+.idea
+android/.gradle
+android/app/*.keystore
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Runner.xcworkspace/
+ios/Pods/
+macos/Flutter/ephemeral/
