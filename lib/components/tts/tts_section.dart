@@ -1,8 +1,9 @@
 class Section {
   String title;
   List<Phrase> phrases;
+  int tileCount;
 
-  Section(this.title, this.phrases);
+  Section(this.title, this.tileCount, this.phrases);
 
   factory Section.fromJson(Map<String, dynamic> json) {
     var phrasesFromJson = json['phrases'] as List;
@@ -11,6 +12,7 @@ class Section {
 
     return Section(
       json['title'],
+      json['tileCount'] ?? 3,
       phraseList,
     );
   }
@@ -18,6 +20,7 @@ class Section {
   Map<String, dynamic> toJson() {
     return {
       'title': title,
+      'tileCount': tileCount,
       'phrases': phrases.map((e) => e.toJson()).toList(),
     };
   }

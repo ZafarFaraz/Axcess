@@ -20,7 +20,7 @@ class _TTSPageState extends State<TTSPage> {
   int _selectedSectionIndex = 0;
   bool editMode = false;
   late FlutterTts flutterTts;
-  TextEditingController _phraseController = TextEditingController();
+  final TextEditingController _phraseController = TextEditingController();
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _TTSPageState extends State<TTSPage> {
   void _addSection() {
     setState(() {
       String newSectionTitle = 'Section ${_sections.length + 1}';
-      _sections.add(Section(newSectionTitle, []));
+      _sections.add(Section(newSectionTitle, 3, []));
     });
     _updateJsonFile();
   }
@@ -107,8 +107,6 @@ class _TTSPageState extends State<TTSPage> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        String oldSection =
-                            _sections[_selectedSectionIndex].title;
                         _sections[_selectedSectionIndex].title =
                             sectionTitleController.text;
                         _updateJsonFile();
@@ -149,6 +147,22 @@ class _TTSPageState extends State<TTSPage> {
     });
   }
 
+  void _incrementTileCount() {
+    setState(() {
+      _sections[_selectedSectionIndex].tileCount++;
+    });
+    _updateJsonFile();
+  }
+
+  void _decrementTileCount() {
+    setState(() {
+      if (_sections[_selectedSectionIndex].tileCount > 1) {
+        _sections[_selectedSectionIndex].tileCount--;
+      }
+    });
+    _updateJsonFile();
+  }
+
   Future<void> _speak(String text) async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.0);
@@ -172,8 +186,25 @@ class _TTSPageState extends State<TTSPage> {
               ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(padding: EdgeInsets.all(16)),
+                Padding(padding: EdgeInsets.all(10)),
+                Text('Tiles per Row: '),
+                IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: _decrementTileCount,
+                ),
+                Text('${_sections[_selectedSectionIndex].tileCount}'),
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: _incrementTileCount,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(padding: EdgeInsets.all(10)),
                 const Text('Edit Mode'),
                 Switch(value: editMode, onChanged: toggleEditMode)
               ],
@@ -296,11 +327,12 @@ class _TTSPageState extends State<TTSPage> {
                         child: GridView.builder(
                           padding: const EdgeInsets.all(16.0),
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3, // Number of items per row
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                _sections[_selectedSectionIndex].tileCount,
                             mainAxisSpacing: 16.0,
                             crossAxisSpacing: 16.0,
-                            childAspectRatio: 2.5, // Aspect ratio for each item
+                            childAspectRatio: 2.5,
                           ),
                           itemCount:
                               _sections[_selectedSectionIndex].phrases.length,
