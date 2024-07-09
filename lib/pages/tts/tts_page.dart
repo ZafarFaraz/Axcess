@@ -65,7 +65,7 @@ class _TTSPageState extends State<TTSPage> {
   void _addSection() {
     setState(() {
       String newSectionTitle = 'Section ${_sections.length + 1}';
-      _sections.add(Section(newSectionTitle, 3, []));
+      _sections.add(Section(newSectionTitle, 3, [], Colors.white));
     });
     _updateJsonFile();
   }
@@ -150,7 +150,6 @@ class _TTSPageState extends State<TTSPage> {
   void toggleEditMode(bool value) {
     setState(() {
       editMode = value;
-      Navigator.of(context).pop();
     });
   }
 
@@ -172,6 +171,15 @@ class _TTSPageState extends State<TTSPage> {
       if (_sections[_selectedSectionIndex].tileCount > 1) {
         _sections[_selectedSectionIndex].tileCount--;
       }
+    });
+    _updateJsonFile();
+  }
+
+  void _changeSectionColor(Color newColor) {
+    if (_sections.isEmpty) return;
+
+    setState(() {
+      _sections[_selectedSectionIndex].backgroundColor = newColor;
     });
     _updateJsonFile();
   }
@@ -199,30 +207,65 @@ class _TTSPageState extends State<TTSPage> {
               ),
             ),
             if (_sections.isNotEmpty)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              Column(
                 children: [
-                  Padding(padding: EdgeInsets.all(10)),
-                  Text('Tiles per Row: '),
-                  IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: _decrementTileCount,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(padding: EdgeInsets.all(10)),
+                      const Text('Edit Mode'),
+                      Switch(value: editMode, onChanged: toggleEditMode)
+                    ],
                   ),
-                  Text('${_sections[_selectedSectionIndex].tileCount}'),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: _incrementTileCount,
-                  ),
+                  if (editMode)
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(padding: EdgeInsets.all(10)),
+                            Text('Tiles per Row: '),
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: _decrementTileCount,
+                            ),
+                            Text(
+                                '${_sections[_selectedSectionIndex].tileCount}'),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: _incrementTileCount,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(padding: EdgeInsets.all(10)),
+                            DropdownButton<Color>(
+                              value: _sections[_selectedSectionIndex]
+                                  .backgroundColor,
+                              items: wcagColorPairs
+                                  .map((colorPair) => DropdownMenuItem<Color>(
+                                        value: colorPair.backgroundColor,
+                                        child: Container(
+                                          width: 100,
+                                          height: 20,
+                                          color: colorPair.backgroundColor,
+                                        ),
+                                      ))
+                                  .toList(),
+                              onChanged: (Color? newColor) {
+                                if (newColor != null) {
+                                  _changeSectionColor(newColor);
+                                }
+                              },
+                            )
+                          ],
+                        ),
+                      ],
+                    )
                 ],
               ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(padding: EdgeInsets.all(10)),
-                const Text('Edit Mode'),
-                Switch(value: editMode, onChanged: toggleEditMode)
-              ],
-            )
           ],
         ),
       ),
@@ -358,6 +401,9 @@ class _TTSPageState extends State<TTSPage> {
                                   Positioned.fill(
                                     child: TTSButton(
                                       text: phrase.label,
+                                      backgroundColor:
+                                          _sections[_selectedSectionIndex]
+                                              .backgroundColor,
                                       onPressed: () {
                                         _speak(phrase.label);
                                       },
