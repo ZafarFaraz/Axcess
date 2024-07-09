@@ -303,9 +303,12 @@ class _TTSPageState extends State<TTSPage> {
                   labelType: NavigationRailLabelType.selected,
                   destinations: _sections
                       .map((section) => NavigationRailDestination(
-                            icon: Icon(
-                              Icons.folder,
-                              size: 30,
+                            icon: Container(
+                              width: 30,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  color: section.backgroundColor,
+                                  borderRadius: BorderRadius.circular(30)),
                             ),
                             selectedIcon: Container(
                               width: 200,
