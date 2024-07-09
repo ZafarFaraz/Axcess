@@ -307,9 +307,23 @@ class _TTSPageState extends State<TTSPage> {
                               Icons.folder,
                               size: 30,
                             ),
-                            selectedIcon: Icon(
-                              Icons.folder_open,
-                              size: 100,
+                            selectedIcon: Container(
+                              width: 200,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  color: section.backgroundColor,
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: Center(
+                                child: Text(
+                                  section.title,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: getTextColorForBackground(
+                                          section.backgroundColor),
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
                             label: SizedBox(
                               width: 200,
@@ -317,7 +331,7 @@ class _TTSPageState extends State<TTSPage> {
                               child: Text(
                                 section.title,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 30),
+                                style: TextStyle(fontSize: 10),
                               ),
                             ),
                           ))
