@@ -2,12 +2,11 @@ import UIKit
 import Flutter
 import UserNotifications
 import Contacts
-import EventKit
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
     private var homeManager: HomeManager?
-    private let eventStore = EKEventStore()
+    private var eventManager: EventManager?
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -15,6 +14,7 @@ import EventKit
       GeneratedPluginRegistrant.register(with: self)
       
       homeManager = HomeManager()
+      eventManager = EventManager()
       
       // Set up method channel
       let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
@@ -44,14 +44,14 @@ import EventKit
           else if call.method == "requestContactPermission" {
               self?.requestContactPermission(result:result)
           } else if call.method == "loadReminders" {
-              self?.loadReminders(result: result)
+              self?.eventManager?.loadReminders(result: result)
           } else if call.method == "addReminder" {
                 if let args = call.arguments as? [String: Any] {
-                    self?.addReminder(args: args, result: result)
+                    self?.eventManager?.addReminder(args: args, result: result)
                 }
             } else if call.method == "updateReminder" {
                 if let args = call.arguments as? [String: Any] {
-                    self?.updateReminder(args: args, result: result)
+                    self?.eventManager?.updateReminder(args: args, result: result)
                 }
             } 
       }
@@ -78,9 +78,9 @@ import EventKit
   }
 
   private func requestReminderAccess(result: @escaping FlutterResult) {
-        eventStore.requestFullAccessToReminders(){ (granted, error) in
+      self.eventManager?.eventStore.requestFullAccessToReminders(){ (granted, error) in
             if granted {
-                self.loadReminders(result: result)
+                self.eventManager?.loadReminders(result: result)
             } else {
                 result(FlutterError(code: "PERMISSION_DENIED", message: "Access to reminders denied", details: nil))
             }
@@ -96,71 +96,6 @@ import EventKit
                         result(granted)
          }
        }
-    }
-
-    private func loadReminders(result: @escaping FlutterResult) {
-    eventStore.requestFullAccessToReminders(){ (granted, error) in
-      if granted {
-        let predicate = self.eventStore.predicateForReminders(in: nil)
-        self.eventStore.fetchReminders(matching: predicate) { reminders in
-          var reminderList = [[String: Any]]()
-          for reminder in reminders ?? [] {
-            let title = reminder.title ?? ""
-            let notes = reminder.notes ?? ""
-            let completed = reminder.isCompleted
-            reminderList.append([
-              "title": title,
-              "notes": notes,
-              "completed": completed
-            ])
-          }
-          result(reminderList)
-        }
-      } else {
-        result(FlutterError(code: "PERMISSION_DENIED", message: "Access to reminders denied", details: nil))
-      }
-    }
-  }
-
-  private func addReminder(args: [String: Any], result: @escaping FlutterResult) {
-        let title = args["title"] as? String ?? ""
-        let notes = args["notes"] as? String ?? ""
-
-        let reminder = EKReminder(eventStore: eventStore)
-        reminder.title = title
-        reminder.notes = notes
-        reminder.calendar = eventStore.defaultCalendarForNewReminders()
-
-        do {
-            try eventStore.save(reminder, commit: true)
-            result("Reminder added successfully")
-        } catch {
-            result(FlutterError(code: "ADD_REMINDER_ERROR", message: "Failed to add reminder", details: error.localizedDescription))
-        }
-    }
-
-    private func updateReminder(args: [String: Any], result: @escaping FlutterResult) {
-        let calendarItemIdentifier = args["calendarItemIdentifier"] as? String ?? ""
-        let title = args["title"] as? String ?? ""
-        let notes = args["notes"] as? String ?? ""
-        let completed = args["completed"] as? Bool ?? false
-
-        let reminder = eventStore.calendarItem(withIdentifier: calendarItemIdentifier) as? EKReminder
-
-        if let reminder = reminder {
-            reminder.title = title
-            reminder.notes = notes
-            reminder.isCompleted = completed
-
-            do {
-                try eventStore.save(reminder, commit: true)
-                result("Reminder updated successfully")
-            } catch {
-                result(FlutterError(code: "UPDATE_REMINDER_ERROR", message: "Failed to update reminder", details: error.localizedDescription))
-            }
-        } else {
-            result(FlutterError(code: "REMINDER_NOT_FOUND", message: "Reminder not found", details: nil))
-        }
     }
     
   

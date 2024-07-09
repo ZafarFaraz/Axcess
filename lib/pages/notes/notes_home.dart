@@ -120,9 +120,21 @@ class _NotesHomePageState extends State<NotesHomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddReminderDialog,
-        child: Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: _showAddReminderDialog,
+            child: Icon(Icons.add),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          FloatingActionButton(
+            onPressed: _loadReminders,
+            child: Icon(Icons.refresh),
+          )
+        ],
       ),
     );
   }

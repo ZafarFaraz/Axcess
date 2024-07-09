@@ -13,6 +13,7 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		4D318DCE2C2A916700F86BDD /* AuxFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D318DCD2C2A916700F86BDD /* AuxFunctions.swift */; };
 		4D318DD02C2A977F00F86BDD /* HomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D318DCF2C2A977F00F86BDD /* HomeManager.swift */; };
+		4D827D652C3CDC82000676EA /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D827D642C3CDC82000676EA /* EventManager.swift */; };
 		5B86CB1CA5E033B5731D5E8D /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942AC8082B1821EB6C4FAAC4 /* Pods_RunnerTests.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -55,6 +56,7 @@
 		4D318DCC2C2A85E000F86BDD /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		4D318DCD2C2A916700F86BDD /* AuxFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuxFunctions.swift; sourceTree = "<group>"; };
 		4D318DCF2C2A977F00F86BDD /* HomeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeManager.swift; sourceTree = "<group>"; };
+		4D827D642C3CDC82000676EA /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		5B9C7C7A4ABD065BCB3AA2E2 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				4D318DCD2C2A916700F86BDD /* AuxFunctions.swift */,
 				4D318DCF2C2A977F00F86BDD /* HomeManager.swift */,
+				4D827D642C3CDC82000676EA /* EventManager.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -160,7 +163,6 @@
 				CD5C7F9B6712B7EB11320506 /* Pods-RunnerTests.release.xcconfig */,
 				1B80ED809909D5AE31A33139 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -385,6 +387,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D827D652C3CDC82000676EA /* EventManager.swift in Sources */,
 				4D318DD02C2A977F00F86BDD /* HomeManager.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
