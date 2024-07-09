@@ -194,7 +194,8 @@ class _TTSPageState extends State<TTSPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Text to Speech'),
+        title:
+            Text('Text to Speech - ${_sections[_selectedSectionIndex].title}'),
       ),
       drawer: Drawer(
         child: ListView(
@@ -452,13 +453,5 @@ class _TTSPageState extends State<TTSPage> {
               ],
             ),
     );
-  }
-
-  void _scrollUp() {
-    print('Scrolling Up');
-  }
-
-  void _scrollDown() {
-    print('Scrolling Down');
   }
 }
