@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../components/colors.dart';
 import '../../components/tts/tts_section.dart';
 import '../../components/tts/tts_button.dart';
 
@@ -151,6 +152,7 @@ class _TTSPageState extends State<TTSPage> {
     setState(() {
       editMode = value;
     });
+    _updateJsonFile();
   }
 
   void _incrementTileCount() {
@@ -194,8 +196,7 @@ class _TTSPageState extends State<TTSPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('Text to Speech - ${_sections[_selectedSectionIndex].title}'),
+        title: Text('Text to Speech'),
       ),
       drawer: Drawer(
         child: ListView(
@@ -332,10 +333,12 @@ class _TTSPageState extends State<TTSPage> {
                             label: SizedBox(
                               width: 200,
                               height: 100,
-                              child: Text(
-                                section.title,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10),
+                              child: Center(
+                                child: Text(
+                                  section.title,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
                             ),
                           ))

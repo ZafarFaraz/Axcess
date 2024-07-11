@@ -13,15 +13,15 @@ class HomeManager: NSObject, HMHomeManagerDelegate {
     func fetchAccessories(completion: @escaping ([[String: String]]) -> Void) {
         var accessoriesList: [[String: String]] = []
         for home in homeManager.homes {
-            for accessory in home.accessories{
+            for accessory in home.accessories {
                 if let room = accessory.room?.name {
                     let accessoryInfo = [
                         "name": accessory.name,
-                        "room": room
+                        "room": room,
+                        "home": home.name // Include the home name
                     ]
                     accessoriesList.append(accessoryInfo)
                 }
-                print(accessory)
             }
         }
         completion(accessoriesList)

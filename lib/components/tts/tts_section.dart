@@ -1,31 +1,28 @@
-import 'package:axcess/components/tts/tts_button.dart';
 import 'package:flutter/material.dart';
 
 class Section {
   String title;
-  List<Phrase> phrases;
   int tileCount;
+  List<Phrase> phrases;
   Color backgroundColor;
 
   Section(this.title, this.tileCount, this.phrases, this.backgroundColor);
 
   factory Section.fromJson(Map<String, dynamic> json) {
-    var phrasesFromJson = json['phrases'] as List;
-    List<Phrase> phraseList =
-        phrasesFromJson.map((i) => Phrase.fromJson(i)).toList();
-
-    return Section(json['title'], json['tileCount'] ?? 3, phraseList,
-        json['backgroundColor'] ?? wcagColorPairs[0].backgroundColor);
+    return Section(
+      json['title'],
+      json['tileCount'],
+      (json['phrases'] as List).map((i) => Phrase.fromJson(i)).toList(),
+      Color(json['backgroundColor']),
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'tileCount': tileCount,
-      'phrases': phrases.map((e) => e.toJson()).toList(),
-      'backoundColor': backgroundColor.value
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'tileCount': tileCount,
+        'phrases': phrases.map((e) => e.toJson()).toList(),
+        'backgroundColor': backgroundColor.value,
+      };
 }
 
 class Phrase {
@@ -41,10 +38,8 @@ class Phrase {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'key': key,
-      'label': label,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'key': key,
+        'label': label,
+      };
 }
