@@ -24,7 +24,7 @@ class HomeButton extends StatelessWidget {
       onTap: onPressed,
       onLongPress: onLongPress,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(30),

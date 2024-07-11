@@ -16,7 +16,7 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
   String? _selectedHome;
   bool editMode = false;
   Color _backgroundColor = wcagColorPairs[6].backgroundColor;
-  double _fontSize = 14.0;
+  double _fontSize = 20.0;
 
   @override
   void initState() {
