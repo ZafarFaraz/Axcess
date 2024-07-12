@@ -21,7 +21,7 @@ class Section {
         'title': title,
         'tileCount': tileCount,
         'phrases': phrases.map((e) => e.toJson()).toList(),
-        'backgroundColor': backgroundColor.value,
+        'backgroundColor': Color(backgroundColor.value),
       };
 }
 

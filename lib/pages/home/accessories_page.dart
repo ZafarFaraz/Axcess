@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import '../../components/colors.dart';
 
 class HomeAccessories extends StatefulWidget {
-  const HomeAccessories({Key? key}) : super(key: key);
+  const HomeAccessories({super.key});
   @override
   _HomeAccessoriesState createState() => _HomeAccessoriesState();
 }
@@ -102,14 +102,14 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Accessories'),
+        title: const Text('Home Accessories'),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.green),
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.green),
               child: SizedBox(
                 child: Text('Admin'),
               ),
@@ -117,7 +117,7 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(padding: EdgeInsets.all(10)),
+                const Padding(padding: EdgeInsets.all(10)),
                 const Text('Edit Mode'),
                 Switch(value: editMode, onChanged: toggleEditMode)
               ],
@@ -125,7 +125,7 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
             if (editMode)
               Column(
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.all(10),
                     child: Text('Background Color:'),
                   ),
@@ -150,15 +150,15 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(padding: EdgeInsets.all(10)),
-                      Text('Font Size:'),
+                      const Padding(padding: EdgeInsets.all(10)),
+                      const Text('Font Size:'),
                       IconButton(
-                        icon: Icon(Icons.remove),
+                        icon: const Icon(Icons.remove),
                         onPressed: _decrementFontSize,
                       ),
                       Text('$_fontSize'),
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                         onPressed: _incrementFontSize,
                       ),
                     ],
@@ -169,7 +169,7 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
         ),
       ),
       body: _homeAccessories.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Row(
               children: [
                 if (_homeAccessories.length > 1)
@@ -185,26 +185,26 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
                     labelType: NavigationRailLabelType.selected,
                     destinations: _homeAccessories.keys
                         .map((home) => NavigationRailDestination(
-                              icon: Icon(Icons.home),
-                              selectedIcon: Icon(Icons.home_filled),
+                              icon: const Icon(Icons.home),
+                              selectedIcon: const Icon(Icons.home_filled),
                               label: Text(home),
                             ))
                         .toList(),
                   ),
                 if (_homeAccessories.length > 1)
-                  VerticalDivider(thickness: 1, width: 1),
+                  const VerticalDivider(thickness: 1, width: 1),
                 if (_selectedHome != null &&
                     _homeAccessories[_selectedHome!] != null)
                   Expanded(
                     child: ListView(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       children: _homeAccessories[_selectedHome!]!
                           .entries
                           .map((entry) {
                         final room = entry.key;
                         final accessories = entry.value;
                         return Container(
-                          margin: EdgeInsets.only(bottom: 16.0),
+                          margin: const EdgeInsets.only(bottom: 16.0),
                           decoration: BoxDecoration(
                             color: isDarkMode ? Colors.grey[850] : Colors.white,
                             borderRadius: BorderRadius.circular(16.0),
@@ -215,7 +215,7 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
                                     : Colors.grey.withOpacity(0.3),
                                 blurRadius: 8.0,
                                 spreadRadius: 1.0,
-                                offset: Offset(0, 3),
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
@@ -233,7 +233,7 @@ class _HomeAccessoriesState extends State<HomeAccessories> {
                                           ? Colors.white
                                           : Colors.black),
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                                 SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(

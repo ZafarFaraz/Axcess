@@ -52,6 +52,7 @@ class _TTSPageState extends State<TTSPage> {
     final file = File(_jsonFilePath!);
     final String response = await file.readAsString();
     final List<dynamic> data = json.decode(response);
+    print(data);
     setState(() {
       _sections = data.map((item) => Section.fromJson(item)).toList();
     });
@@ -92,13 +93,14 @@ class _TTSPageState extends State<TTSPage> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text('Edit Section'),
+              title: const Text('Edit Section'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: sectionTitleController,
-                    decoration: InputDecoration(labelText: 'Section Title'),
+                    decoration:
+                        const InputDecoration(labelText: 'Section Title'),
                   )
                 ],
               ),
@@ -107,7 +109,7 @@ class _TTSPageState extends State<TTSPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 TextButton(
                     onPressed: () {
@@ -118,7 +120,7 @@ class _TTSPageState extends State<TTSPage> {
                       });
                       Navigator.of(context).pop();
                     },
-                    child: Text('Edit'))
+                    child: const Text('Edit'))
               ],
             ));
   }
@@ -196,14 +198,14 @@ class _TTSPageState extends State<TTSPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Text to Speech'),
+        title: const Text('Text to Speech'),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.green),
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.green),
               child: SizedBox(
                 child: Text('Admin'),
               ),
@@ -214,7 +216,7 @@ class _TTSPageState extends State<TTSPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(padding: EdgeInsets.all(10)),
+                      const Padding(padding: EdgeInsets.all(10)),
                       const Text('Edit Mode'),
                       Switch(value: editMode, onChanged: toggleEditMode)
                     ],
@@ -225,16 +227,16 @@ class _TTSPageState extends State<TTSPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(padding: EdgeInsets.all(10)),
-                            Text('Tiles per Row: '),
+                            const Padding(padding: EdgeInsets.all(10)),
+                            const Text('Tiles per Row: '),
                             IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               onPressed: _decrementTileCount,
                             ),
                             Text(
                                 '${_sections[_selectedSectionIndex].tileCount}'),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               onPressed: _incrementTileCount,
                             ),
                           ],
@@ -242,7 +244,7 @@ class _TTSPageState extends State<TTSPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(padding: EdgeInsets.all(10)),
+                            const Padding(padding: EdgeInsets.all(10)),
                             DropdownButton<Color>(
                               value: _sections[_selectedSectionIndex]
                                   .backgroundColor,
@@ -272,7 +274,7 @@ class _TTSPageState extends State<TTSPage> {
         ),
       ),
       body: _sections.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Row(
               children: [
                 if (editMode)
@@ -281,21 +283,21 @@ class _TTSPageState extends State<TTSPage> {
                     children: [
                       FloatingActionButton(
                         onPressed: _addSection,
-                        child: Icon(Icons.add),
                         tooltip: 'Add Section',
+                        child: const Icon(Icons.add),
                       ),
                       const SizedBox(height: 16),
                       FloatingActionButton(
                         onPressed: _editSection,
-                        child: Icon(Icons.edit),
                         tooltip: 'Edit Section',
+                        child: const Icon(Icons.edit),
                       ),
                       const SizedBox(height: 16),
                       if (_sections.length > 2)
                         FloatingActionButton(
                           onPressed: _removeSection,
-                          child: Icon(Icons.remove),
                           tooltip: 'Remove Section',
+                          child: const Icon(Icons.remove),
                         ),
                     ],
                   ),
@@ -337,7 +339,7 @@ class _TTSPageState extends State<TTSPage> {
                                 child: Text(
                                   section.title,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 10),
+                                  style: const TextStyle(fontSize: 10),
                                 ),
                               ),
                             ),
@@ -371,7 +373,7 @@ class _TTSPageState extends State<TTSPage> {
                                           _speak(_phraseController.text);
                                         }
                                       },
-                                      child: Text("Speak"),
+                                      child: const Text("Speak"),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -384,7 +386,7 @@ class _TTSPageState extends State<TTSPage> {
                                           _phraseController.clear();
                                         }
                                       },
-                                      child: Text("Add"),
+                                      child: const Text("Add"),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -393,7 +395,7 @@ class _TTSPageState extends State<TTSPage> {
                                       onPressed: () {
                                         _phraseController.clear();
                                       },
-                                      child: Text("Clear"),
+                                      child: const Text("Clear"),
                                     ),
                                   ),
                                 ],

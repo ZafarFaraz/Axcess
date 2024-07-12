@@ -24,7 +24,7 @@ class _CommunicationHomePageState extends State<CommunicationHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Communicate'),
+        title: const Text('Communicate'),
       ),
       body: Row(
         children: [
@@ -32,7 +32,7 @@ class _CommunicationHomePageState extends State<CommunicationHomePage> {
             selectedIndex: _selectedIndex,
             onDestinationSelected: _onDestinationSelected,
             labelType: NavigationRailLabelType.selected,
-            destinations: [
+            destinations: const [
               NavigationRailDestination(
                 icon: Icon(Icons.dialpad),
                 label: Text('Keypad'),
@@ -48,7 +48,7 @@ class _CommunicationHomePageState extends State<CommunicationHomePage> {
           Expanded(
             child: IndexedStack(
               index: _selectedIndex,
-              children: [
+              children: const [
                 CommunicationKeypadPage(),
                 CommunicationContactsPage(),
               ],

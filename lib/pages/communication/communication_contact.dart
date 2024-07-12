@@ -15,8 +15,8 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
   static const platform = MethodChannel('axcessibility_notify');
   List<Contact> _contacts = [];
   List<Contact> _filteredContacts = [];
-  TextEditingController _searchController = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -58,17 +58,17 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
   }
 
   void _filterContacts() {
-    List<Contact> _contactsFiltered = [];
-    _contactsFiltered.addAll(_contacts);
+    List<Contact> contactsFiltered = [];
+    contactsFiltered.addAll(_contacts);
     if (_searchController.text.isNotEmpty) {
-      _contactsFiltered.retainWhere((contact) {
+      contactsFiltered.retainWhere((contact) {
         String searchTerm = _searchController.text.toLowerCase();
         String contactName = contact.displayName?.toLowerCase() ?? '';
         return contactName.contains(searchTerm);
       });
     }
     setState(() {
-      _filteredContacts = _contactsFiltered;
+      _filteredContacts = contactsFiltered;
     });
   }
 
@@ -93,32 +93,32 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
   void _scrollToTop() {
     _scrollController.animateTo(
       0.0,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       curve: Curves.easeInOut,
     );
   }
 
   void _scrollUp() {
-    final double scrollAmount = 300.0; // Adjust this value as needed
+    const double scrollAmount = 300.0; // Adjust this value as needed
     final double currentScroll = _scrollController.position.pixels;
     final double targetScroll = currentScroll - scrollAmount;
 
     _scrollController.animateTo(
       targetScroll < 0 ? 0 : targetScroll,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       curve: Curves.easeInOut,
     );
   }
 
   void _scrollDown() {
-    final double scrollAmount = 300.0; // Adjust this value as needed
+    const double scrollAmount = 300.0; // Adjust this value as needed
     final double maxScroll = _scrollController.position.maxScrollExtent;
     final double currentScroll = _scrollController.position.pixels;
     final double targetScroll = currentScroll + scrollAmount;
 
     _scrollController.animateTo(
       targetScroll > maxScroll ? maxScroll : targetScroll,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       curve: Curves.easeInOut,
     );
   }
@@ -128,12 +128,12 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48.0),
+          preferredSize: const Size.fromHeight(48.0),
           child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Search Contacts',
                 prefixIcon: Icon(Icons.search),
@@ -150,7 +150,7 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
                 child: GestureDetector(
                   onTap: _scrollUp,
                   child: Container(
-                    child: Center(
+                    child: const Center(
                       child: Icon(Icons.arrow_upward,
                           size: 36, color: Colors.white),
                     ),
@@ -161,7 +161,7 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
                 child: GestureDetector(
                   onTap: _scrollDown,
                   child: Container(
-                    child: Center(
+                    child: const Center(
                       child: Icon(Icons.arrow_downward,
                           size: 36, color: Colors.white),
                     ),
@@ -175,7 +175,7 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
               controller: _scrollController,
               slivers: [
                 _filteredContacts.isEmpty
-                    ? SliverFillRemaining(
+                    ? const SliverFillRemaining(
                         child: Center(child: CircularProgressIndicator()),
                       )
                     : SliverList(
@@ -194,13 +194,13 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    icon: Icon(Icons.phone),
+                                    icon: const Icon(Icons.phone),
                                     onPressed: phoneNumber != null
                                         ? () => _makeCall(phoneNumber)
                                         : null,
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.videocam),
+                                    icon: const Icon(Icons.videocam),
                                     onPressed: phoneNumber != null
                                         ? () => _facetime(phoneNumber)
                                         : null,
@@ -219,7 +219,7 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _scrollToTop,
-        child: Icon(Icons.arrow_upward),
+        child: const Icon(Icons.arrow_upward),
       ),
     );
   }

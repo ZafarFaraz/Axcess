@@ -61,7 +61,7 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
               child: Center(
                 child: Text(
                   _phoneNumber,
-                  style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -74,14 +74,14 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
                 Expanded(
                   child: _buildActionButton(Icons.phone, _makeCall),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: _buildActionButton(Icons.videocam, _facetime),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
         ],
       ),
     );
@@ -91,11 +91,11 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
     return Column(
       children: [
         _buildKeypadRow(['1', '2', '3']),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildKeypadRow(['4', '5', '6']),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildKeypadRow(['7', '8', '9']),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildKeypadRow([Icons.backspace, '0', Icons.clear]),
       ],
     );
@@ -106,7 +106,7 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         for (int i = 0; i < items.length; i++) ...[
-          if (i > 0) SizedBox(width: 16),
+          if (i > 0) const SizedBox(width: 16),
           items[i] is String
               ? _buildNumberButton(items[i])
               : _buildSpecialButton(
@@ -123,13 +123,13 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
     return ElevatedButton(
       onPressed: () => _appendNumber(number),
       style: ElevatedButton.styleFrom(
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         padding: const EdgeInsets.all(24),
-        minimumSize: Size(120, 120),
+        minimumSize: const Size(120, 120),
       ),
       child: Text(
         number,
-        style: TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }
@@ -138,9 +138,9 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         padding: const EdgeInsets.all(24),
-        minimumSize: Size(120, 120),
+        minimumSize: const Size(120, 120),
       ),
       child: Icon(
         icon,
@@ -153,8 +153,8 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(),
-        padding: EdgeInsets.symmetric(vertical: 16),
+        shape: const RoundedRectangleBorder(),
+        padding: const EdgeInsets.symmetric(vertical: 16),
       ),
       child: Icon(
         icon,

@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 class NotesHomePage extends StatefulWidget {
   const NotesHomePage({super.key});
@@ -64,7 +61,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reminders'),
+        title: const Text('Reminders'),
       ),
       body: Row(
         children: [
@@ -125,14 +122,14 @@ class _NotesHomePageState extends State<NotesHomePage> {
         children: [
           FloatingActionButton(
             onPressed: _showAddReminderDialog,
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
           FloatingActionButton(
             onPressed: _loadReminders,
-            child: Icon(Icons.refresh),
+            child: const Icon(Icons.refresh),
           )
         ],
       ),
@@ -145,7 +142,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
         ? Center(
             child: Text(
               emptyMessage,
-              style: TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 24),
             ),
           )
         : GridView.builder(
@@ -177,18 +174,18 @@ class _NotesHomePageState extends State<NotesHomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(reminder['title'],
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black)),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 reminder['notes'] ?? '',
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 reminder['completed'] ? 'Completed' : 'Not Completed',
                 style: TextStyle(
@@ -202,23 +199,23 @@ class _NotesHomePageState extends State<NotesHomePage> {
   }
 
   void _showAddReminderDialog() {
-    final _titleController = TextEditingController();
-    final _notesController = TextEditingController();
+    final titleController = TextEditingController();
+    final notesController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add Reminder'),
+        title: const Text('Add Reminder'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Title'),
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
             ),
             TextField(
-              controller: _notesController,
-              decoration: InputDecoration(labelText: 'Notes'),
+              controller: notesController,
+              decoration: const InputDecoration(labelText: 'Notes'),
             ),
           ],
         ),
@@ -227,14 +224,14 @@ class _NotesHomePageState extends State<NotesHomePage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              _addReminder(_titleController.text, _notesController.text);
+              _addReminder(titleController.text, notesController.text);
               Navigator.of(context).pop();
             },
-            child: Text('Add'),
+            child: const Text('Add'),
           ),
         ],
       ),
@@ -242,31 +239,31 @@ class _NotesHomePageState extends State<NotesHomePage> {
   }
 
   void _showUpdateReminderDialog(Map<String, dynamic> reminder) {
-    final _titleController = TextEditingController(text: reminder['title']);
-    final _notesController = TextEditingController(text: reminder['notes']);
-    bool _completed = reminder['completed'];
+    final titleController = TextEditingController(text: reminder['title']);
+    final notesController = TextEditingController(text: reminder['notes']);
+    bool completed = reminder['completed'];
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Update Reminder'),
+        title: const Text('Update Reminder'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Title'),
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
             ),
             TextField(
-              controller: _notesController,
-              decoration: InputDecoration(labelText: 'Notes'),
+              controller: notesController,
+              decoration: const InputDecoration(labelText: 'Notes'),
             ),
             CheckboxListTile(
-              title: Text('Completed'),
-              value: _completed,
+              title: const Text('Completed'),
+              value: completed,
               onChanged: (bool? value) {
                 setState(() {
-                  _completed = value!;
+                  completed = value!;
                 });
               },
             ),
@@ -277,17 +274,17 @@ class _NotesHomePageState extends State<NotesHomePage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              reminder['title'] = _titleController.text;
-              reminder['notes'] = _notesController.text;
-              reminder['completed'] = _completed;
+              reminder['title'] = titleController.text;
+              reminder['notes'] = notesController.text;
+              reminder['completed'] = completed;
               _updateReminder(reminder);
               Navigator.of(context).pop();
             },
-            child: Text('Update'),
+            child: const Text('Update'),
           ),
         ],
       ),
