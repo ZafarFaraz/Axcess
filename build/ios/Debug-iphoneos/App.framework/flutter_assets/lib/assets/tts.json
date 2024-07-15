@@ -1,0 +1,32 @@
+[
+    {
+        "title": "Section 1",
+        "tileCount": 3,
+        "phrases": [
+            {
+                "key": "custom_0",
+                "label": "Custom phrase 1 for Section 1"
+            },
+            {
+                "key": "custom_1",
+                "label": "Custom phrase 2 for Section 1"
+            }
+        ],
+        "backgroundColor": 4294967295
+    },
+    {
+        "title": "Section 2",
+        "tileCount": 3,
+        "phrases": [
+            {
+                "key": "custom_0",
+                "label": "Custom phrase 1 for Section 2"
+            },
+            {
+                "key": "custom_1",
+                "label": "Custom phrase 2 for Section 2"
+            }
+        ],
+        "backgroundColor": 4294967295
+    }
+]
