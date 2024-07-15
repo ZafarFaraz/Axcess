@@ -77,17 +77,22 @@ This section allows you to dial a number using your cell provider or call a numb
 
 ### Text to Speech
 
+<img width="1194" alt="image" src="https://github.com/user-attachments/assets/952d0e59-616d-48c9-89b9-a3fe538dc0cd">
+
 ### Smart Home
 
-![IMG_0119](https://github.com/ZafarFaraz/Axcess/assets/130891786/66659022-be99-4100-8dc3-da0acb6464e7)
+<img width="1194" alt="image" src="https://github.com/user-attachments/assets/e29a7953-3d60-472e-8ebc-e3acb2e12fec">
 
 ### Caller
 
-![IMG_0120](https://github.com/ZafarFaraz/Axcess/assets/130891786/2134ecbb-d287-4345-88eb-a65224467aab)
+<img width="1194" alt="image" src="https://github.com/user-attachments/assets/dffbb145-504c-4b7b-9a94-b98b67de1b0e">
+
+![IMG_0006](https://github.com/user-attachments/assets/f44d3512-7c75-47fb-873f-a114d22bf876)
+#### Hiding contact details for privacy reasons
 
 ### Notes
 
-![IMG_0121](https://github.com/ZafarFaraz/Axcess/assets/130891786/6a2871d1-2191-4e5b-b412-adca09c87f5b)
+![Screenshot 2024-07-15 at 7 25 35 PM](https://github.com/user-attachments/assets/d39c3662-085c-4cea-b70a-755870e5dfd1)
 
 
 ## Contributing
