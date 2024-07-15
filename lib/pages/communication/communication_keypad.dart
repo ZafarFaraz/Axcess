@@ -53,112 +53,129 @@ class _CommunicationKeypadPageState extends State<CommunicationKeypadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(
-            child: Container(
-              child: Center(
-                child: Text(
-                  _phoneNumber,
-                  style: const TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
-                ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: Center(
+              child: Text(
+                _phoneNumber,
+                style:
+                    const TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
               ),
             ),
           ),
-          _buildKeypad(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildActionButton(Icons.phone, _makeCall),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildKeypad(),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildActionButton(Icons.videocam, _facetime),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildActionButton(Icons.phone, _makeCall),
+                    const SizedBox(height: 20),
+                    _buildActionButton(Icons.videocam, _facetime),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
         ],
       ),
     );
   }
 
   Widget _buildKeypad() {
-    return Column(
-      children: [
-        _buildKeypadRow(['1', '2', '3']),
-        const SizedBox(height: 16),
-        _buildKeypadRow(['4', '5', '6']),
-        const SizedBox(height: 16),
-        _buildKeypadRow(['7', '8', '9']),
-        const SizedBox(height: 16),
-        _buildKeypadRow([Icons.backspace, '0', Icons.clear]),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double buttonSize = (constraints.maxWidth - 80) / 4;
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            _buildKeypadRow(['1', '2', '3'], buttonSize),
+            _buildKeypadRow(['4', '5', '6'], buttonSize),
+            _buildKeypadRow(['7', '8', '9'], buttonSize),
+            _buildKeypadRow([Icons.backspace, '0', Icons.clear], buttonSize),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildKeypadRow(List<dynamic> items) {
+  Widget _buildKeypadRow(List<dynamic> items, double buttonSize) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (int i = 0; i < items.length; i++) ...[
-          if (i > 0) const SizedBox(width: 16),
-          items[i] is String
-              ? _buildNumberButton(items[i])
-              : _buildSpecialButton(
-                  items[i],
-                  items[i] == Icons.backspace
-                      ? _deleteLastNumber
-                      : _clearNumber),
-        ]
-      ],
+      children: items.map((item) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0), // Add padding around buttons
+          child: item is String
+              ? _buildNumberButton(item, buttonSize)
+              : _buildSpecialButton(item, buttonSize),
+        );
+      }).toList(),
     );
   }
 
-  Widget _buildNumberButton(String number) {
+  Widget _buildNumberButton(String number, double buttonSize) {
     return ElevatedButton(
       onPressed: () => _appendNumber(number),
       style: ElevatedButton.styleFrom(
-        shape: const CircleBorder(),
-        padding: const EdgeInsets.all(24),
-        minimumSize: const Size(120, 120),
+        shape: const CircleBorder(), backgroundColor: Colors.grey[800],
+        minimumSize: Size(buttonSize, buttonSize), // Change color as needed
       ),
       child: Text(
         number,
-        style: const TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 36, color: Colors.white),
       ),
     );
   }
 
-  Widget _buildSpecialButton(IconData icon, VoidCallback onPressed) {
+  Widget _buildSpecialButton(dynamic icon, double buttonSize) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: icon == Icons.backspace ? _deleteLastNumber : _clearNumber,
       style: ElevatedButton.styleFrom(
-        shape: const CircleBorder(),
-        padding: const EdgeInsets.all(24),
-        minimumSize: const Size(120, 120),
+        shape: const CircleBorder(), backgroundColor: Colors.grey[800],
+        minimumSize: Size(buttonSize, buttonSize), // Change color as needed
       ),
       child: Icon(
         icon,
-        size: 24,
+        size: 36,
+        color: Colors.white,
       ),
     );
   }
 
   Widget _buildActionButton(IconData icon, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        shape: const RoundedRectangleBorder(),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
-      child: Icon(
-        icon,
-        size: 32,
+    return Container(
+      width: 400,
+      height: 200,
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+          borderRadius: BorderRadius.circular(30)),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          backgroundColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(vertical: 32),
+        ),
+        child: Icon(
+          icon,
+          size: 50,
+          color: Colors.white,
+        ),
       ),
     );
   }

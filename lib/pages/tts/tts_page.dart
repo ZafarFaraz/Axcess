@@ -22,6 +22,7 @@ class _TTSPageState extends State<TTSPage> {
   bool editMode = false;
   late FlutterTts flutterTts;
   final TextEditingController _phraseController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -188,6 +189,31 @@ class _TTSPageState extends State<TTSPage> {
     _updateJsonFile();
   }
 
+  void _scrollUp() {
+    const double scrollAmount = 300.0; // Adjust this value as needed
+    final double currentScroll = _scrollController.position.pixels;
+    final double targetScroll = currentScroll - scrollAmount;
+
+    _scrollController.animateTo(
+      targetScroll < 0 ? 0 : targetScroll,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _scrollDown() {
+    const double scrollAmount = 300.0; // Adjust this value as needed
+    final double maxScroll = _scrollController.position.maxScrollExtent;
+    final double currentScroll = _scrollController.position.pixels;
+    final double targetScroll = currentScroll + scrollAmount;
+
+    _scrollController.animateTo(
+      targetScroll > maxScroll ? maxScroll : targetScroll,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
+
   Future<void> _speak(String text) async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.0);
@@ -348,109 +374,152 @@ class _TTSPageState extends State<TTSPage> {
                 ),
                 if (_sections.isNotEmpty)
                   Expanded(
-                    child: Column(
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
+                        Expanded(
                           child: Column(
                             children: [
-                              TextField(
-                                controller: _phraseController,
-                                decoration: InputDecoration(
-                                  labelText: "Enter custom phrase",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                  ),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    TextField(
+                                      controller: _phraseController,
+                                      decoration: InputDecoration(
+                                        labelText: "Enter custom phrase",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              if (_phraseController
+                                                  .text.isNotEmpty) {
+                                                _speak(_phraseController.text);
+                                              }
+                                            },
+                                            child: const Text("Speak"),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              if (_phraseController
+                                                  .text.isNotEmpty) {
+                                                _addPhrase(
+                                                    _selectedSectionIndex,
+                                                    _phraseController.text);
+                                                _phraseController.clear();
+                                              }
+                                            },
+                                            child: const Text("Add"),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              _phraseController.clear();
+                                            },
+                                            child: const Text("Clear"),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        if (_phraseController.text.isNotEmpty) {
-                                          _speak(_phraseController.text);
-                                        }
-                                      },
-                                      child: const Text("Speak"),
-                                    ),
+                              Expanded(
+                                child: GridView.builder(
+                                  controller: _scrollController,
+                                  padding: const EdgeInsets.all(16.0),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        _sections[_selectedSectionIndex]
+                                            .tileCount,
+                                    mainAxisSpacing: 16.0,
+                                    crossAxisSpacing: 16.0,
+                                    childAspectRatio: 2.5,
                                   ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        if (_phraseController.text.isNotEmpty) {
-                                          _addPhrase(_selectedSectionIndex,
-                                              _phraseController.text);
-                                          _phraseController.clear();
-                                        }
-                                      },
-                                      child: const Text("Add"),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        _phraseController.clear();
-                                      },
-                                      child: const Text("Clear"),
-                                    ),
-                                  ),
-                                ],
+                                  itemCount: _sections[_selectedSectionIndex]
+                                      .phrases
+                                      .length,
+                                  itemBuilder: (context, phraseIndex) {
+                                    final phrase =
+                                        _sections[_selectedSectionIndex]
+                                            .phrases[phraseIndex];
+                                    return Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: TTSButton(
+                                            text: phrase.label,
+                                            backgroundColor:
+                                                _sections[_selectedSectionIndex]
+                                                    .backgroundColor,
+                                            onPressed: () {
+                                              _speak(phrase.label);
+                                            },
+                                            onLongPress:
+                                                () {}, // Required but not used here
+                                          ),
+                                        ),
+                                        if (editMode)
+                                          Positioned(
+                                            right: 8,
+                                            top: 8,
+                                            child: FloatingActionButton(
+                                              mini: true,
+                                              backgroundColor: Colors.red,
+                                              onPressed: () => _removePhrase(
+                                                  _selectedSectionIndex,
+                                                  phraseIndex),
+                                              child: const Icon(Icons.close,
+                                                  size: 20),
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        Expanded(
-                          child: GridView.builder(
-                            padding: const EdgeInsets.all(16.0),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount:
-                                  _sections[_selectedSectionIndex].tileCount,
-                              mainAxisSpacing: 16.0,
-                              crossAxisSpacing: 16.0,
-                              childAspectRatio: 2.5,
-                            ),
-                            itemCount:
-                                _sections[_selectedSectionIndex].phrases.length,
-                            itemBuilder: (context, phraseIndex) {
-                              final phrase = _sections[_selectedSectionIndex]
-                                  .phrases[phraseIndex];
-                              return Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: TTSButton(
-                                      text: phrase.label,
-                                      backgroundColor:
-                                          _sections[_selectedSectionIndex]
-                                              .backgroundColor,
-                                      onPressed: () {
-                                        _speak(phrase.label);
-                                      },
-                                      onLongPress:
-                                          () {}, // Required but not used here
-                                    ),
-                                  ),
-                                  if (editMode)
-                                    Positioned(
-                                      right: 8,
-                                      top: 8,
-                                      child: FloatingActionButton(
-                                        mini: true,
-                                        backgroundColor: Colors.red,
-                                        onPressed: () => _removePhrase(
-                                            _selectedSectionIndex, phraseIndex),
-                                        child:
-                                            const Icon(Icons.close, size: 20),
-                                      ),
-                                    ),
-                                ],
-                              );
-                            },
-                          ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                                child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: IconButton(
+                                icon: const Icon(Icons.arrow_upward, size: 36),
+                                onPressed: _scrollUp,
+                              ),
+                            )),
+                            const SizedBox(height: 16),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(30)),
+                                child: IconButton(
+                                  icon: const Icon(Icons.arrow_downward,
+                                      size: 36),
+                                  onPressed: _scrollDown,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ],
                     ),

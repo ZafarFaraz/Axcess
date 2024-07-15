@@ -144,32 +144,6 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
       ),
       body: Row(
         children: [
-          Column(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: _scrollUp,
-                  child: Container(
-                    child: const Center(
-                      child: Icon(Icons.arrow_upward,
-                          size: 36, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: _scrollDown,
-                  child: Container(
-                    child: const Center(
-                      child: Icon(Icons.arrow_downward,
-                          size: 36, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
           Expanded(
             child: CustomScrollView(
               controller: _scrollController,
@@ -214,6 +188,38 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
                       ),
               ],
             ),
+          ),
+          Column(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: _scrollUp,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(30)),
+                    child: const Center(
+                      child: Icon(Icons.arrow_upward,
+                          size: 36, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: _scrollDown,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(30)),
+                    child: const Center(
+                      child: Icon(Icons.arrow_downward,
+                          size: 36, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
