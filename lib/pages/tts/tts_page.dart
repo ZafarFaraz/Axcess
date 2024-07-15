@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:axcess/components/base_widgets.dart';
+import 'package:axcess/components/base_widgets/scroll_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_tts/flutter_tts.dart';

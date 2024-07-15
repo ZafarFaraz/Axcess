@@ -1,4 +1,4 @@
-import 'package:axcess/components/base_widgets.dart';
+import 'package:axcess/components/base_widgets/scroll_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:url_launcher/url_launcher.dart';

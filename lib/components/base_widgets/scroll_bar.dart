@@ -46,6 +46,7 @@ class scrollBar extends StatelessWidget {
           child: GestureDetector(
             onTap: _scrollUp,
             child: Container(
+              width: 60,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(30)),
@@ -55,10 +56,14 @@ class scrollBar extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(
+          height: 20,
+        ),
         Expanded(
           child: GestureDetector(
             onTap: _scrollDown,
             child: Container(
+              width: 60,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(30)),
