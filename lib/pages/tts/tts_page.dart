@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:axcess/components/base_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_tts/flutter_tts.dart';
@@ -53,7 +54,6 @@ class _TTSPageState extends State<TTSPage> {
     final file = File(_jsonFilePath!);
     final String response = await file.readAsString();
     final List<dynamic> data = json.decode(response);
-    print(data);
     setState(() {
       _sections = data.map((item) => Section.fromJson(item)).toList();
     });
@@ -187,31 +187,6 @@ class _TTSPageState extends State<TTSPage> {
       _sections[_selectedSectionIndex].backgroundColor = newColor;
     });
     _updateJsonFile();
-  }
-
-  void _scrollUp() {
-    const double scrollAmount = 300.0; // Adjust this value as needed
-    final double currentScroll = _scrollController.position.pixels;
-    final double targetScroll = currentScroll - scrollAmount;
-
-    _scrollController.animateTo(
-      targetScroll < 0 ? 0 : targetScroll,
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _scrollDown() {
-    const double scrollAmount = 300.0; // Adjust this value as needed
-    final double maxScroll = _scrollController.position.maxScrollExtent;
-    final double currentScroll = _scrollController.position.pixels;
-    final double targetScroll = currentScroll + scrollAmount;
-
-    _scrollController.animateTo(
-      targetScroll > maxScroll ? maxScroll : targetScroll,
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-    );
   }
 
   Future<void> _speak(String text) async {
@@ -493,34 +468,7 @@ class _TTSPageState extends State<TTSPage> {
                             ],
                           ),
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                                child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: IconButton(
-                                icon: const Icon(Icons.arrow_upward, size: 36),
-                                onPressed: _scrollUp,
-                              ),
-                            )),
-                            const SizedBox(height: 16),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(30)),
-                                child: IconButton(
-                                  icon: const Icon(Icons.arrow_downward,
-                                      size: 36),
-                                  onPressed: _scrollDown,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+                        scrollBar(scrollController: _scrollController),
                       ],
                     ),
                   ),

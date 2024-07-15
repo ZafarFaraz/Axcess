@@ -1,3 +1,4 @@
+import 'package:axcess/components/base_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,7 +31,6 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
   @override
   void dispose() {
     _searchController.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -88,39 +88,6 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
     } else {
       throw 'Could not launch $url';
     }
-  }
-
-  void _scrollToTop() {
-    _scrollController.animateTo(
-      0.0,
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _scrollUp() {
-    const double scrollAmount = 300.0; // Adjust this value as needed
-    final double currentScroll = _scrollController.position.pixels;
-    final double targetScroll = currentScroll - scrollAmount;
-
-    _scrollController.animateTo(
-      targetScroll < 0 ? 0 : targetScroll,
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _scrollDown() {
-    const double scrollAmount = 300.0; // Adjust this value as needed
-    final double maxScroll = _scrollController.position.maxScrollExtent;
-    final double currentScroll = _scrollController.position.pixels;
-    final double targetScroll = currentScroll + scrollAmount;
-
-    _scrollController.animateTo(
-      targetScroll > maxScroll ? maxScroll : targetScroll,
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-    );
   }
 
   @override
@@ -189,43 +156,8 @@ class _CommunicationContactsPageState extends State<CommunicationContactsPage> {
               ],
             ),
           ),
-          Column(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: _scrollUp,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(30)),
-                    child: const Center(
-                      child: Icon(Icons.arrow_upward,
-                          size: 36, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: _scrollDown,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(30)),
-                    child: const Center(
-                      child: Icon(Icons.arrow_downward,
-                          size: 36, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          scrollBar(scrollController: _scrollController)
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _scrollToTop,
-        child: const Icon(Icons.arrow_upward),
       ),
     );
   }
