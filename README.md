@@ -85,7 +85,7 @@ This section allows you to dial a number using your cell provider or call a numb
 
 ### Caller
 
-<img width="1194" alt="image" src="https://github.com/user-attachments/assets/dffbb145-504c-4b7b-9a94-b98b67de1b0e">
+![IMG_0005](https://github.com/user-attachments/assets/fe0a30ac-bc04-4121-a9c3-aafa66c5ec6e)
 
 ![IMG_0006](https://github.com/user-attachments/assets/f44d3512-7c75-47fb-873f-a114d22bf876)
 #### Hiding contact details for privacy reasons
